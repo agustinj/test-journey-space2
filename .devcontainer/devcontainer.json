@@ -1,0 +1,28 @@
+{
+  "name": "TestJourney - Week 1 environment",
+
+  // Playwright: Node + browser support (Chromium, Firefox, WebKit) + deps
+  "image": "mcr.microsoft.com/playwright:v1.62.1-jammy",
+
+  // Docker-in-Docker support
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-playwright.playwright",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "CucumberOpen.cucumber-official"
+      ]
+    }
+  },
+
+  // One-time setup: env check, deps, local site bootstrap
+  "postCreateCommand": "node -v && npm -v; npx -y playwright@latest install-deps || true; bash .devcontainer/setup-toolshop.sh || true; echo '✅ Base environment ready.'",
+
+  // Restarts local site on resume
+  "postStartCommand": "bash .devcontainer/start-toolshop.sh || true"
+}
