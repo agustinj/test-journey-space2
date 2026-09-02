@@ -14,6 +14,18 @@ When('I filter by category {string}', async function (categoryName: string) {
   await this.catalogPage.filterByCategory(categoryName);
 });
 
+import { ProductPage } from '../../pages/ProductPage';
+
+When('I open the details of the first product in the results', async function () {
+  this.catalogSummary = await this.catalogPage.getFirstProductSummary();
+  await this.catalogPage.openFirstProduct();
+});
+
+Then('the product name, price and sustainability rating should match what was shown in the catalog', async function () {
+  const productPage = new ProductPage(this.page);
+  await productPage.expectMatches(this.catalogSummary);
+});
+
 Then('there should be {int} products in the results', async function (count: number) {
   await this.catalogPage.expectResultCount(count);
 });

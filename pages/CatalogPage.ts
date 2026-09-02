@@ -33,4 +33,15 @@ export class CatalogPage {
     const names = await this.page.locator('[data-test="product-name"]').allTextContents();
     expect(names.length).toBe(count);
   }
+
+  async openFirstProduct() {
+    await this.page.locator('[data-test^="product-"]').first().click();
+  }
+
+  async getFirstProductSummary() {
+    const name = await this.page.locator('[data-test="product-name"]').first().textContent();
+    const price = await this.page.locator('[data-test="product-price"]').first().textContent();
+    const rating = await this.page.locator('[data-test="co2-rating-badge"] .co2-letter.active').first().textContent();
+    return { name: name?.trim(), price: price?.trim(), rating: rating?.trim() };
+  }
 }

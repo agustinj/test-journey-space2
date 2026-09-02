@@ -15,3 +15,8 @@ Feature: Product catalog search
     When I filter by category "Hammer"
     Then the results should include a product named "Sledgehammer"
     And there should be 7 products in the results
+
+  Scenario: Product details match what was shown in the catalog
+    Given I am on the product catalog page
+    When I open the details of the first product in the results
+    Then the product name, price and sustainability rating should match what was shown in the catalog
