@@ -18,4 +18,10 @@ export class CatalogPage {
       expect(name.toLowerCase()).toContain(term.toLowerCase());
     }
   }
+
+  async expectProductInResults(productName: string) {
+    const names = await this.page.locator('[data-test="product-name"]').allTextContents();
+    const trimmedNames = names.map(n => n.trim());
+    expect(trimmedNames).toContain(productName);
+  }
 }
