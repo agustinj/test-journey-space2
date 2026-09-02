@@ -24,4 +24,13 @@ export class CatalogPage {
     const trimmedNames = names.map(n => n.trim());
     expect(trimmedNames).toContain(productName);
   }
+
+  async filterByCategory(categoryName: string) {
+    await this.page.getByLabel(categoryName).check();
+  }
+
+  async expectResultCount(count: number) {
+    const names = await this.page.locator('[data-test="product-name"]').allTextContents();
+    expect(names.length).toBe(count);
+  }
 }

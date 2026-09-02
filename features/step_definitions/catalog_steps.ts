@@ -10,6 +10,14 @@ When('I search for {string}', async function (term: string) {
   await this.catalogPage.searchFor(term);
 });
 
+When('I filter by category {string}', async function (categoryName: string) {
+  await this.catalogPage.filterByCategory(categoryName);
+});
+
+Then('there should be {int} products in the results', async function (count: number) {
+  await this.catalogPage.expectResultCount(count);
+});
+
 Then('all displayed products should contain {string} in their name', async function (term: string) {
   await this.catalogPage.expectAllProductNamesToContain(term);
 });

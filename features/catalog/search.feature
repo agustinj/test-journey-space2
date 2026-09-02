@@ -9,3 +9,9 @@ Feature: Product catalog search
     Given I am on the product catalog page
     When I search for "hammer"
     Then the results should include a product named "Sledgehammer"
+
+  Scenario: Filtering by category shows only products from that category
+    Given I am on the product catalog page
+    When I filter by category "Hammer"
+    Then the results should include a product named "Sledgehammer"
+    And there should be 7 products in the results
