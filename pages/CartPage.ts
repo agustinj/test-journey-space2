@@ -12,4 +12,8 @@ export class CartPage {
     const lineTotal = parseFloat(lineTotalText?.replace('$', '').trim() ?? '0');
     expect(lineTotal).toBeCloseTo(expectedTotal, 2);
   }
+
+  async updateQuantity(newQuantity: number) {
+    await this.page.locator('[data-test="product-quantity"]').fill(newQuantity.toString());
+  }
 }

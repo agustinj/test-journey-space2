@@ -12,7 +12,7 @@ Before(async function () {
 });
 
 After(async function (scenario) {
-  if (scenario.result?.status === Status.FAILED) {
+  if (scenario.result?.status === Status.FAILED && this.page) {
     const screenshot = await this.page.screenshot();
     this.attach(screenshot, 'image/png');
   }
