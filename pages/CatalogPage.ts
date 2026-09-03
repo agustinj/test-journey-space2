@@ -27,6 +27,7 @@ export class CatalogPage {
 
   async filterByCategory(categoryName: string) {
     await this.page.getByLabel(categoryName).check();
+    await this.page.waitForLoadState('networkidle');
   }
 
   async expectResultCount(count: number) {

@@ -1,4 +1,5 @@
-import { setDefaultTimeout, Before, After } from '@cucumber/cucumber';
+import 'dotenv/config';
+import { setDefaultTimeout, Before, After, Status } from '@cucumber/cucumber';
 import { chromium, Browser, Page } from '@playwright/test';
 
 setDefaultTimeout(10000);
@@ -10,6 +11,10 @@ Before(async function () {
   this.page = await browser.newPage();
 });
 
-After(async function () {
+After(async function (scenario) {
+  if (scenario.result?.status === Status.FAILED) {
+    const screenshot = await this.page.screenshot();
+    this.attach(screenshot, 'image/png');
+  }
   await browser.close();
 });

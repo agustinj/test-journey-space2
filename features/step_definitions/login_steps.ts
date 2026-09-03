@@ -7,7 +7,10 @@ Given('I am on the login page', async function () {
 });
 
 When('I log in with a valid email and password', async function () {
-  await this.loginPage.login('customer@practicesoftwaretesting.com', 'welcome01');
+  await this.loginPage.login(
+    process.env.CUSTOMER_EMAIL!,
+    process.env.CUSTOMER_PASSWORD!
+  );
 });
 
 Then('I should be redirected to my account page', async function () {

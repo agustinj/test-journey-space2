@@ -11,4 +11,17 @@ export class ProductPage {
     expect(`$${price?.trim()}`).toBe(expected.price);
     expect(rating?.trim()).toBe(expected.rating);
   }
+
+  async setQuantity(quantity: number) {
+    await this.page.locator('[data-test="quantity"]').fill(quantity.toString());
+  }
+
+  async addToCart() {
+    await this.page.locator('[data-test="add-to-cart"]').click();
+  }
+
+  async getUnitPrice(): Promise<number> {
+    const price = await this.page.locator('[data-test="unit-price"]').textContent();
+    return parseFloat(price?.trim() ?? '0');
+  }
 }
