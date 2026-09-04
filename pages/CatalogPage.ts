@@ -45,4 +45,14 @@ export class CatalogPage {
     const rating = await this.page.locator('[data-test="co2-rating-badge"] .co2-letter.active').first().textContent();
     return { name: name?.trim(), price: price?.trim(), rating: rating?.trim() };
   }
+
+  async openProductAt(index: number) {
+    await this.page.locator('a[data-test^="product-"]').nth(index).click();
+  }
+
+  async getProductSummaryAt(index: number) {
+    const name = await this.page.locator('[data-test="product-name"]').nth(index).textContent();
+    const price = await this.page.locator('[data-test="product-price"]').nth(index).textContent();
+    return { name: name?.trim(), price: price?.trim() };
+  }
 }

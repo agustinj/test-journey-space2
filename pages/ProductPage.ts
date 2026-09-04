@@ -16,8 +16,9 @@ export class ProductPage {
     await this.page.locator('[data-test="quantity"]').fill(quantity.toString());
   }
 
-  async addToCart() {
+  async addToCart(expectedCartCount: number) {
     await this.page.locator('[data-test="add-to-cart"]').click();
+    await expect(this.page.locator('[data-test="cart-quantity"]')).toHaveText(expectedCartCount.toString());
   }
 
   async getUnitPrice(): Promise<number> {
