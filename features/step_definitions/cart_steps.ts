@@ -16,8 +16,8 @@ async function addUnitsOfProductAt(world: any, index: number, quantity: number) 
   return { name: summary.name, unitPrice };
 }
 
-Given('I have added {int} units of a product to the cart', async function (quantity: number) {
-  const result = await addUnitsOfProductAt(this, 0, quantity);
+Given(/^I have added (\d+) units? of a product to the cart$/, async function (quantity: string) {
+  const result = await addUnitsOfProductAt(this, 0, parseInt(quantity));
   this.unitPrice = result.unitPrice;
   this.firstProductName = result.name;
 });

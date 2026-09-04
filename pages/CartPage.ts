@@ -35,4 +35,8 @@ export class CartPage {
 
     expect(cartTotal).toBeCloseTo(lineTotal, 2);
   }
+
+  async proceedToCheckout() {
+    await this.page.locator('[data-test="proceed-1"]').click();
+  }
 }
