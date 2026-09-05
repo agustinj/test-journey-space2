@@ -51,4 +51,19 @@ export class CheckoutPage {
     await method.select(this.page);
     await method.fillDetails(this.page);
   }
+
+  async confirmOrder() {
+    await this.page.locator('[data-test="finish"]').click();
+    await this.page.locator('[data-test="payment-success-message"]').waitFor({ state: 'visible' });
+    await this.page.waitForLoadState('networkidle');
+    await this.page.locator('[data-test="finish"]').click();
+  }
+
+  async expectOrderConfirmed() {
+    await expect(this.page.locator('#order-confirmation')).toBeVisible();
+  }
+
+  async proceedFromAddressStep() {
+    await this.page.locator('[data-test="proceed-3"]').click();
+  }
 }

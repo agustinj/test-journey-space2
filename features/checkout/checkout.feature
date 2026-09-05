@@ -22,6 +22,7 @@ Feature: Checkout
     And I have added 1 unit of a product to the cart
     When I proceed to checkout
     And I fill in a valid billing address
+    And I proceed from the address step
     And I pay with "<payment_method>"
     Then the order should be placed successfully
 

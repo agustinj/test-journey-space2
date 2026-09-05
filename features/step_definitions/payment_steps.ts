@@ -20,5 +20,6 @@ When('I pay with {string}', async function (methodKey: string) {
 });
 
 Then('the order should be placed successfully', async function () {
-  // TODO: confirmar qué señal usar
+  await this.checkoutPage.confirmOrder();
+  await this.checkoutPage.expectOrderConfirmed();
 });

@@ -31,6 +31,10 @@ When('I fill in a billing address without a city', async function () {
   });
 });
 
+When('I proceed from the address step', async function () {
+  await this.checkoutPage.proceedFromAddressStep();
+});
+
 Then('the proceed button should be disabled', async function () {
   await this.checkoutPage.expectProceedButtonDisabled();
 });
