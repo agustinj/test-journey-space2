@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test';
+import { PaymentMethod } from './paymentMethods/PaymentMethod';
 
 export class CheckoutPage {
   constructor(private page: Page) {}
@@ -44,5 +45,10 @@ export class CheckoutPage {
 
   async expectProceedButtonDisabled() {
     await expect(this.page.locator('[data-test="proceed-3"]')).toBeDisabled();
+  }
+
+  async payWith(method: PaymentMethod) {
+    await method.select(this.page);
+    await method.fillDetails(this.page);
   }
 }
