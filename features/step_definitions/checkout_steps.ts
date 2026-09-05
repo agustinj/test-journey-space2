@@ -21,6 +21,20 @@ When('I fill in a valid billing address', async function () {
   });
 });
 
+When('I fill in a billing address without a city', async function () {
+  await this.checkoutPage.fillBillingAddressWithoutCity({
+    country: 'AR',
+    postalCode: '1000',
+    houseNumber: '42',
+    street: 'Test Street',
+    state: 'Buenos Aires',
+  });
+});
+
+Then('the proceed button should be disabled', async function () {
+  await this.checkoutPage.expectProceedButtonDisabled();
+});
+
 Then('the proceed button should be enabled', async function () {
   await this.checkoutPage.expectProceedButtonEnabled();
 });
