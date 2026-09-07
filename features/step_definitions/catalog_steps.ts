@@ -1,5 +1,6 @@
 import { Given, When, Then } from '@cucumber/cucumber';
 import { CatalogPage } from '../../pages/CatalogPage';
+import { ProductPage } from '../../pages/ProductPage';
 
 Given('I am on the product catalog page', async function () {
   this.catalogPage = new CatalogPage(this.page);
@@ -14,11 +15,15 @@ When('I filter by category {string}', async function (categoryName: string) {
   await this.catalogPage.filterByCategory(categoryName);
 });
 
-import { ProductPage } from '../../pages/ProductPage';
-
 When('I open the details of the first product in the results', async function () {
   this.catalogSummary = await this.catalogPage.getFirstProductSummary();
   await this.catalogPage.openFirstProduct();
+});
+
+When('I add {int} unit of the product to the cart', async function (quantity: number) {
+  const productPage = new ProductPage(this.page);
+  await productPage.setQuantity(quantity);
+  await productPage.addToCart(quantity);
 });
 
 Then('the product name, price and sustainability rating should match what was shown in the catalog', async function () {
