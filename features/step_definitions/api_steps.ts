@@ -14,13 +14,17 @@ Given('a valid product exists in the catalog', async function () {
 });
 
 When('I try to add a negative quantity of that product to the cart via API', async function () {
-  console.log('cartId:', this.cartId, 'productId:', this.productId);
   const cartApi = new CartApi(this.apiContext);
   this.apiResponse = await cartApi.addProduct(this.cartId, this.productId, 0);
 });
 
 When('I request the list of products via API', async function () {
   this.apiResponse = await this.apiContext.get('/products');
+});
+
+When('I try to add a decimal quantity of that product to the cart via API', async function () {
+  const cartApi = new CartApi(this.apiContext);
+  this.apiResponse = await cartApi.addProduct(this.cartId, this.productId, 1.5);
 });
 
 Then('the API response status should be {int}', async function (expectedStatus: number) {
