@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { setDefaultTimeout, Before, After, BeforeAll, AfterAll, Status } from '@cucumber/cucumber';
 import { chromium, Browser } from '@playwright/test';
+import { request, APIRequestContext } from '@playwright/test';
 
 setDefaultTimeout(10000);
 
@@ -26,12 +27,16 @@ Before(async function () {
   const context = await browser.newContext({ storageState: STORAGE_STATE_PATH });
   this.context = context;
   this.page = await context.newPage();
+  this.apiContext = await request.newContext({ baseURL: 'http://localhost:8091' });
 });
 
 After(async function (scenario) {
   if (scenario.result?.status === Status.FAILED && this.page) {
     const screenshot = await this.page.screenshot();
     this.attach(screenshot, 'image/png');
+  }
+  if (this.apiContext) {
+    await this.apiContext.dispose();
   }
   if (this.context) {
     await this.context.close();
