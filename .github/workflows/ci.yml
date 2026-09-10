@@ -28,6 +28,9 @@ jobs:
       - name: Debug container status
         run: docker ps -a
 
+      - name: Debug web container logs
+        run: docker logs toolshop-web-1 --tail 50
+
       - name: Wait for ToolShop to respond
         run: |
           for i in $(seq 1 40); do
