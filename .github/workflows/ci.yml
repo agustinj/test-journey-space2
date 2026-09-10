@@ -73,10 +73,3 @@ jobs:
         env:
           CUSTOMER_EMAIL: ${{ secrets.CUSTOMER_EMAIL }}
           CUSTOMER_PASSWORD: ${{ secrets.CUSTOMER_PASSWORD }}
-
-      - name: Subir captura de debug del login
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: login-failure-debug
-          path: login-failure-debug.png
