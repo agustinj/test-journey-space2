@@ -37,12 +37,23 @@ jobs:
 
       - name: Wait for ToolShop to respond
         run: |
+          echo "Waiting for API..."
           for i in $(seq 1 40); do
-            if curl -sf -o /dev/null http://localhost:4200 && curl -sf -o /dev/null http://localhost:8091/products; then
-              echo "ToolShop is up"
+            if curl -sf -o /dev/null http://localhost:8091/products; then
+              echo "API is up"
+              break
+            fi
+            sleep 3
+          done
+
+          echo "Waiting for UI..."
+          for i in $(seq 1 40); do
+            if curl -sf -o /dev/null http://localhost:4200; then
+              echo "UI is up"
               exit 0
             fi
             sleep 3
           done
+
           echo "ToolShop did not respond in time"
           exit 1
