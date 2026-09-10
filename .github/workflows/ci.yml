@@ -13,3 +13,14 @@ jobs:
         uses: actions/checkout@v4
       - name: Placeholder step
         run: echo "CI pipeline is wired up"
+
+      - name: Clone ToolShop
+        run: |
+                git clone --quiet https://github.com/testsmith-io/practice-software-testing.git toolshop
+                cd toolshop
+                printf 'services:\n  web:\n    build:\n      context: ./_docker\n      dockerfile: web.docker\n  cron:\n    build:\n      context: ./_docker/cron\n      dockerfile: Dockerfile\n' > docker-compose.local-build.yml
+                echo "SPRINT=sprint5" >> .env
+
+      - name: Start ToolShop containers
+        working-directory: toolshop
+        run: docker compose -f docker-compose.prod.yml -f docker-compose.local-build.yml -p toolshop up -d --build
