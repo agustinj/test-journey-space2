@@ -8,47 +8,18 @@ setDefaultTimeout(10000);
 let browser: Browser;
 const STORAGE_STATE_PATH = 'storage-state.json';
 
-BeforeAll({ timeout: 60000 }, async function () {
-  const t0 = Date.now();
-  const log = (label: string) => console.log(`[BeforeAll] ${label} — ${Date.now() - t0}ms`);
-
-  const emailLen = (process.env.CUSTOMER_EMAIL ?? '').length;
-  const passLen = (process.env.CUSTOMER_PASSWORD ?? '').length;
-  console.log(`[debug] EMAIL len=${emailLen}`);
-  console.log(`[debug] PASSWORD len=${passLen}`);
-
+BeforeAll({ timeout: 30000 }, async function () {
   browser = await chromium.launch();
-  log('browser launched');
 
   const context = await browser.newContext();
   const page = await context.newPage();
-
   await page.goto('http://localhost:4200/auth/login');
-  log('goto /auth/login done');
-
   await page.locator('[data-test="email"]').fill(process.env.CUSTOMER_EMAIL!);
-  log('email filled');
-
   await page.locator('[data-test="password"]').fill(process.env.CUSTOMER_PASSWORD!);
-  log('password filled');
-
   await page.locator('[data-test="login-submit"]').click();
-  log('submit clicked');
-
-  try {
-    await page.waitForURL(/.*\/account/, { timeout: 15000 });
-    log('waitForURL /account resolved');
-  } catch (e) {
-    log(`waitForURL falló — URL actual: ${page.url()}`);
-    await page.screenshot({ path: 'login-failure-debug.png' });
-    throw e;
-  }
-
+  await page.waitForURL(/.*\/account/);
   await context.storageState({ path: STORAGE_STATE_PATH });
-  log('storageState saved');
-
   await context.close();
-  log('context closed');
 });
 
 Before(async function () {
