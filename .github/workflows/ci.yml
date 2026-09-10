@@ -25,6 +25,9 @@ jobs:
         working-directory: toolshop
         run: docker compose -f docker-compose.prod.yml -f docker-compose.local-build.yml -p toolshop up -d --build
 
+      - name: Debug container status
+        run: docker ps -a
+
       - name: Wait for ToolShop to respond
         run: |
           for i in $(seq 1 40); do
