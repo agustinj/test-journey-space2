@@ -16,11 +16,23 @@ jobs:
 
       - name: Clone ToolShop
         run: |
-                git clone --quiet https://github.com/testsmith-io/practice-software-testing.git toolshop
-                cd toolshop
-                printf 'services:\n  web:\n    build:\n      context: ./_docker\n      dockerfile: web.docker\n  cron:\n    build:\n      context: ./_docker/cron\n      dockerfile: Dockerfile\n' > docker-compose.local-build.yml
-                echo "SPRINT=sprint5" >> .env
+          git clone --quiet https://github.com/testsmith-io/practice-software-testing.git toolshop
+          cd toolshop
+          printf 'services:\n  web:\n    build:\n      context: ./_docker\n      dockerfile: web.docker\n  cron:\n    build:\n      context: ./_docker/cron\n      dockerfile: Dockerfile\n' > docker-compose.local-build.yml
+          echo "SPRINT=sprint5" >> .env
 
       - name: Start ToolShop containers
         working-directory: toolshop
         run: docker compose -f docker-compose.prod.yml -f docker-compose.local-build.yml -p toolshop up -d --build
+
+      - name: Wait for ToolShop to respond
+        run: |
+          for i in $(seq 1 40); do
+            if curl -sf -o /dev/null http://localhost:4200 && curl -sf -o /dev/null http://localhost:8091/products; then
+              echo "ToolShop is up"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "ToolShop did not respond in time"
+          exit 1
