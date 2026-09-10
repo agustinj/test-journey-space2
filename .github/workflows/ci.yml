@@ -70,3 +70,6 @@ jobs:
 
       - name: Run critical test suite
         run: npm run test:critical
+        env:
+          CUSTOMER_EMAIL: ${{ secrets.CUSTOMER_EMAIL }}
+          CUSTOMER_PASSWORD: ${{ secrets.CUSTOMER_PASSWORD }}
