@@ -18,5 +18,5 @@ Then('I should be redirected to my account page', async function () {
 });
 
 Then('I should see my name displayed', async function () {
-  await this.loginPage.expectNameVisible('NoRealName');
+  await this.loginPage.expectNameVisible('Jane');
 });
