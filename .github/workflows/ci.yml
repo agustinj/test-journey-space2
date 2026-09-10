@@ -64,3 +64,9 @@ jobs:
           $COMPOSE exec -T laravel-api php artisan migrate:fresh --seed --force
           $COMPOSE exec -T -u root laravel-api chown -R www-data:www-data storage bootstrap/cache
           $COMPOSE exec -T -u root laravel-api chmod -R 775 storage bootstrap/cache
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run critical test suite
+        run: npm run test:critical
