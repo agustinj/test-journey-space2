@@ -31,6 +31,15 @@ BeforeAll({ timeout: 60000 }, async function () {
   await page.locator('[data-test="login-submit"]').click();
   log('submit clicked');
 
+  try {
+    await page.waitForURL(/.*\/account/, { timeout: 15000 });
+    log('waitForURL /account resolved');
+  } catch (e) {
+    log(`waitForURL falló — URL actual: ${page.url()}`);
+    await page.screenshot({ path: 'login-failure-debug.png' });
+    throw e;
+  }
+
   await page.waitForURL(/.*\/account/);
   log('waitForURL /account resolved');
 
