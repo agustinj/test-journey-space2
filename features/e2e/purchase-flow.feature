@@ -1,5 +1,6 @@
 Feature: End-to-end purchase journey
 
+    @critical
     Scenario: Complete purchase flow from catalog to confirmation
         Given I am logged in
         And I am on the product catalog page

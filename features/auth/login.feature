@@ -1,5 +1,6 @@
 Feature: Login
 
+  @critical
   Scenario: Successful login with valid credentials
     Given I am on the login page
     When I log in with a valid email and password

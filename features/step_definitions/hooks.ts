@@ -8,10 +8,9 @@ setDefaultTimeout(10000);
 let browser: Browser;
 const STORAGE_STATE_PATH = 'storage-state.json';
 
-BeforeAll(async function () {
+BeforeAll({ timeout: 30000 }, async function () {
   browser = await chromium.launch();
 
-  // Log in once and save the session state
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto('http://localhost:4200/auth/login');

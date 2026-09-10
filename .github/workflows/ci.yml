@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Clone ToolShop
+        run: |
+          git clone --quiet https://github.com/testsmith-io/practice-software-testing.git toolshop
+          cd toolshop
+          printf 'services:\n  web:\n    build:\n      context: ./_docker\n      dockerfile: web.docker\n  cron:\n    build:\n      context: ./_docker/cron\n      dockerfile: Dockerfile\n' > docker-compose.local-build.yml
+          echo "SPRINT=sprint5" >> .env
+
+      - name: Start ToolShop containers
+        working-directory: toolshop
+        run: docker compose -f docker-compose.prod.yml -f docker-compose.local-build.yml -p toolshop up -d --build
+
+      - name: Wait for ToolShop to respond
+        run: |
+          echo "Waiting for API..."
+          for i in $(seq 1 40); do
+            if curl -sf -o /dev/null http://localhost:8091/products; then
+              echo "API is up"
+              break
+            fi
+            sleep 3
+          done
+
+          echo "Waiting for UI..."
+          for i in $(seq 1 40); do
+            if curl -sf -o /dev/null http://localhost:4200; then
+              echo "UI is up"
+              exit 0
+            fi
+            sleep 3
+          done
+
+          echo "ToolShop did not respond in time"
+          exit 1
+      
+      - name: Seed the database
+        working-directory: toolshop
+        run: |
+          COMPOSE="docker compose -f docker-compose.prod.yml -f docker-compose.local-build.yml -p toolshop"
+          $COMPOSE exec -T laravel-api sh -c 'grep -q "^L5_SWAGGER_USE_ABSOLUTE_PATH=" /var/www/.env || echo "L5_SWAGGER_USE_ABSOLUTE_PATH=false" >> /var/www/.env'
+          $COMPOSE exec -T laravel-api php artisan config:clear
+          $COMPOSE restart laravel-api
+          $COMPOSE exec -T laravel-api php artisan migrate:fresh --seed --force
+          $COMPOSE exec -T -u root laravel-api chown -R www-data:www-data storage bootstrap/cache
+          $COMPOSE exec -T -u root laravel-api chmod -R 775 storage bootstrap/cache
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run critical test suite
+        run: npm run test:critical
+        env:
+          CUSTOMER_EMAIL: ${{ secrets.CUSTOMER_EMAIL }}
+          CUSTOMER_PASSWORD: ${{ secrets.CUSTOMER_PASSWORD }}
