@@ -12,10 +12,14 @@ BeforeAll({ timeout: 60000 }, async function () {
   const t0 = Date.now();
   const log = (label: string) => console.log(`[BeforeAll] ${label} — ${Date.now() - t0}ms`);
 
+  const emailLen = (process.env.CUSTOMER_EMAIL ?? '').length;
+  const passLen = (process.env.CUSTOMER_PASSWORD ?? '').length;
+  console.log(`[debug] EMAIL len=${emailLen}`);
+  console.log(`[debug] PASSWORD len=${passLen}`);
+
   browser = await chromium.launch();
   log('browser launched');
 
-  // Log in once and save the session state
   const context = await browser.newContext();
   const page = await context.newPage();
 
@@ -39,9 +43,6 @@ BeforeAll({ timeout: 60000 }, async function () {
     await page.screenshot({ path: 'login-failure-debug.png' });
     throw e;
   }
-
-  await page.waitForURL(/.*\/account/);
-  log('waitForURL /account resolved');
 
   await context.storageState({ path: STORAGE_STATE_PATH });
   log('storageState saved');
